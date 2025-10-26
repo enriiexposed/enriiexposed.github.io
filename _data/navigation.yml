@@ -8,9 +8,6 @@
 #      Markdown formatted page while the second is generated using JSON.
 
 main:
-  - title: "About My Portfolio"
-    url: /aboutme/
-        
   - title: "Blog Posts"
     url: /year-archive/
     
