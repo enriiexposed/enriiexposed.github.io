@@ -35,6 +35,13 @@ const work = await Promise.all(
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
+    <div class="flex flex-col items-center justify-center">
+      <img
+        src="/images/yo.jpg"
+        alt="Es una foto en la que aparezco yo :)"
+        class="w-48 h-48 rounded-full"
+      />
+    </div>
     <h4 class="animate font-semibold text-black dark:text-white">
       Hi, I'm Enrique <span class="text-xl">👋🏻</span>
     </h4>
@@ -43,10 +50,13 @@ const work = await Promise.all(
         <article class="space-y-4">
           <p class="animate">
             I am a passionate Computer Science Student en route to pursueing a
-            career as a Solutions Architect. I'm also passionate on low-level
-            programming, embedded systems, and everything in between hardware
-            and software. As Linux Torvalds once said, "Giving me a soldier iron
-            is a bad idea...", so im not a pure hardware boy
+            career as a Solutions Architect.
+          </p>
+          <p class="animate">
+            I'm also passionate on low-level programming, embedded systems, and
+            everything in between hardware and software. As Linux Torvalds once
+            said, "Giving me a soldier iron is a bad idea...", so im not a pure
+            hardware boy
           </p>
           <p class="animate">
             Visit
