@@ -1,0 +1,22 @@
+---
+// TODO: Remember to change the href to the correct path of your CV
+interface Props {
+  href?: string;
+  class?: string;
+}
+
+const { href = "https://cvdesignr.com/p/686266c6f2e32", class: className } =
+  Astro.props;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors",
+    className,
+  ]}
+>
+  My CV
+</a>
