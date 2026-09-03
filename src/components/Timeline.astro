@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entries: CollectionEntry<'trayectoria'>[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section id="projects" class="mx-auto max-w-2xl px-6 py-16">
+	<h2 class="journey-title mb-16 origin-center text-center text-5xl font-bold tracking-tight sm:text-6xl">
+		My Journey
+	</h2>
+	<ol class="m-0 flex list-none flex-col gap-16 p-0">
+    {
+      entries.map((entry) => (
+        <li>
+          <article class="card-focus rounded-xl border border-card-border bg-card p-6">
+            <p class="mb-1 text-sm font-semibold text-muted">{entry.data.date.getFullYear()}</p>
+            <h2 class="mb-2 text-lg">{entry.data.title}</h2>
+            <ul class="list-disc pl-4 text-sm leading-relaxed text-muted">
+              {entry.data.details.map((detail) => (
+                <li>{detail}</li>
+              ))}
+            </ul>
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+</section>

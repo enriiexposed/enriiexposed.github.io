@@ -1,0 +1,91 @@
+---
+const nodes = [
+  { name: 'Anthropic', x: 50, y: 10, delay: '0s' },
+  { name: 'TypeScript', x: 16, y: 28, delay: '0.4s' },
+  { name: 'VS Code', x: 84, y: 26, delay: '0.8s' },
+  { name: 'Git', x: 50, y: 50, delay: '1.2s' },
+  { name: 'Java', x: 12, y: 64, delay: '1.6s' },
+  { name: 'React', x: 88, y: 62, delay: '2s' },
+  { name: 'Node', x: 30, y: 90, delay: '2.4s' },
+  { name: 'Python', x: 70, y: 90, delay: '2.8s' },
+];
+
+const links = [
+  [0, 3],
+  [1, 3],
+  [2, 3],
+  [3, 4],
+  [3, 5],
+  [3, 6],
+  [3, 7],
+  [1, 2],
+  [4, 6],
+  [5, 7],
+];
+
+const icons: Record<string, string> = {
+  Anthropic:
+    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.3 4h-2.6L4.8 20h2.9l1.3-3.4h5.9L16.2 20h2.9L13.3 4Zm-3.1 10 2-5.4 2 5.4h-4Z"/></svg>',
+  TypeScript:
+    '<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#3178c6"/><path fill="#fff" d="M9.5 12.6H7v-1.4h6.6v1.4h-2.5V19H9.5v-6.4Zm5.1 4.2c.4.4 1 .7 1.7.7.7 0 1.1-.3 1.1-.8 0-.5-.4-.7-1.2-1-1.2-.4-2.1-.9-2.1-2.1 0-1.2 1-2 2.4-2 .9 0 1.6.3 2.1.8l-.9 1c-.3-.3-.7-.5-1.2-.5-.6 0-.9.3-.9.7 0 .5.5.6 1.3.9 1.2.4 2 .9 2 2.1 0 1.3-1 2.2-2.6 2.2-1 0-1.9-.4-2.5-1l.8-1Z"/></svg>',
+  'VS Code':
+    '<svg viewBox="0 0 24 24" fill="none"><path d="M16.8 2.4 8.6 9.7 4.3 6.4 2.4 7.3v9.4l1.9.9 4.3-3.3 8.2 7.3 3.3-1.6V4L16.8 2.4Z" fill="#3c99d4"/></svg>',
+  Git: '<svg viewBox="0 0 24 24" fill="#f05033"><path d="M21.6 10.9 13.1 2.4a1.4 1.4 0 0 0-2 0l-1.7 1.7 2.2 2.2c.5-.2 1.2 0 1.6.5.4.4.5 1 .4 1.5l2.1 2.1a1.2 1.2 0 1 1-.8.8L13 9.3v5.4c.2.1.4.2.5.4.5.5.5 1.2 0 1.7-.5.5-1.3.5-1.8 0-.5-.5-.5-1.2 0-1.7l.3-.3V9.2a1.3 1.3 0 0 1-.7-1.7L8.9 5.1l-6.5 6.5a1.4 1.4 0 0 0 0 2l8.5 8.5c.6.6 1.5.6 2 0l8.7-8.7c.6-.5.6-1.4 0-2Z"/></svg>',
+  Java: '<svg viewBox="0 0 24 24" fill="#e76f00"><path d="M8.6 17.3s-1.2.7.9.9c2.5.3 3.8.2 6.6-.3 0 0 .7.5 1.7.8-6.2 2.6-14-.1-9.2-1.4Zm-.7-3.1s-1.4 1 .8 1.3c2.7.3 4.8.3 8.4-.4 0 0 .5.5 1.2.7-7.4 2.2-15.7.2-10.4-1.6Zm7-6c1.5 1.8-.4 3.3-.4 3.3s3.7-1.9 2-4.3c-1.6-2.3-2.8-3.4 3.8-7.3 0 0-10.4 2.6-5.4 8.3Zm5.9 10.1s.9.8-1 1.4c-3.7 1.1-15.4 1.5-18.7 0-1.2-.5.9-1.3 1.6-1.4.7-.2 1-.1 1-.1-1.2-.8-7.7 1.7-3.3 2.4 12 2 21.9-.9 20.4-2.3Zm-9.9-5.2s-5.4 1.3-1.9 1.8c1.5.2 4.4.1 7.1-.1 2.2-.2 4.5-.6 4.5-.6s-.8.3-1.4.7c-5.6 1.5-16.3.8-13.2-.7 2.6-1.3 4.9-1.1 4.9-1.1Zm7.7 4.3c5.7-3 3-5.8 1.2-5.5-.4.1-.6.2-.6.2s.2-.3.5-.4c3.7-1.3 6.6 3.9-1.2 5.9 0 0 .1-.1.1-.2Z"/></svg>',
+  React:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="#61dafb"><circle cx="12" cy="12" r="2.2" fill="#61dafb" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"/></svg>',
+  Node: '<svg viewBox="0 0 24 24" fill="#83cd29"><path d="M12 1.9 2.5 7.4v9.2L12 22.1l9.5-5.5V7.4L12 1.9Zm0 2.3 7.4 4.3v8.6L12 21l-.6-.3c1-.1 1.9-.5 1.9-1.6V13c0-.1-.1-.2-.2-.2h-1c-.1 0-.2.1-.2.2v6.2c0 .5-.5.9-2 .5-1.4-.4-1.5-1-1.5-1.7v-6c0-.1-.1-.2-.2-.2H7.1c-.1 0-.2.1-.2.2v6c0 1.7.9 2.7 2.6 3.1.4.1.8.2 1.1.2h.1L12 21l-7.4-4.2V8.5L12 4.2Z"/></svg>',
+  Python:
+    '<svg viewBox="0 0 24 24" fill="none"><path d="M12 2c-4 0-3.8 1.7-3.8 1.7v1.8h3.9v.5H6.4S4 5.7 4 9.8s2.1 4 2.1 4h1.3v-2s-.1-2.1 2-2.1H13s2 0 2-2V4.1S15.3 2 12 2Zm-2.1 1.2a.7.7 0 1 1 0 1.4.7.7 0 0 1 0-1.4Z" fill="#3776ab"/><path d="M12 22c4 0 3.8-1.7 3.8-1.7v-1.8h-3.9v-.5h5.7s2.4.1 2.4-4-2.1-4-2.1-4h-1.3v2s.1 2.1-2 2.1H11s-2 0-2 2v3.8S8.7 22 12 22Zm2.1-1.2a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Z" fill="#ffd43b"/></svg>',
+};
+---
+
+<section class="mx-auto grid max-w-5xl gap-10 px-6 py-16 md:grid-cols-2 md:items-center">
+  <div>
+    <h1 class="text-4xl font-bold">Hi, I'm Enrique</h1>
+    <p class="mt-4 text-lg text-muted">
+      I build things for the web, from idea to deploy.
+    </p>
+    <a
+      href="#projects"
+      class="group relative isolate mt-8 inline-flex items-center overflow-hidden rounded-md border border-card-border px-6 py-2.5 text-sm font-medium text-fg"
+    >
+      <span class="absolute inset-0 -z-10 origin-left scale-x-0 bg-fg transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
+      <span class="transition-colors duration-300 group-hover:text-bg">View projects</span>
+    </a>
+  </div>
+
+  <div class="relative mx-auto aspect-square w-full max-w-sm">
+    <svg
+      class="absolute inset-0 -z-10 h-full w-full text-card-border"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+    >
+      {
+        links.map(([a, b]) => (
+          <line
+            x1={nodes[a].x}
+            y1={nodes[a].y}
+            x2={nodes[b].x}
+            y2={nodes[b].y}
+            stroke="currentColor"
+            stroke-width="0.5"
+            opacity="0.5"
+            vector-effect="non-scaling-stroke"
+          />
+        ))
+      }
+    </svg>
+    {
+      nodes.map((node) => (
+        <div
+          class="absolute flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 animate-float items-center justify-center rounded-full border border-card-border bg-card p-2 shadow-sm"
+          style={`left:${node.x}%; top:${node.y}%; animation-delay:${node.delay};`}
+          title={node.name}
+        >
+          <span class="block h-6 w-6" set:html={icons[node.name]} />
+        </div>
+      ))
+    }
+  </div>
+</section>
