@@ -1,5 +1,7 @@
 name: Pull Request
 
+run-name: "@{{github.actor}} -> Pull Request {{github.run_number}}"
+
 on:
   pull_request:
     branches:

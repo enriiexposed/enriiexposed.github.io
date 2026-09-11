@@ -1,5 +1,7 @@
 name: Deploy
 
+run-name: "@{{github.actor}} -> Deploy {{github.run_number}}"
+
 on:
   workflow_dispatch:
 
@@ -9,7 +11,7 @@ permissions:
 
 # Stack name and region must match infra/bin/infra.ts and infra/constants/index.ts.
 env:
-  STACK_NAME: PortfolioInfraStack
+  STACK_NAME: PortfolioInfraStackNoDomain
 
 jobs:
   deploy:
@@ -51,7 +53,7 @@ jobs:
 
       - name: Deploy infra (CDK)
         working-directory: infra
-        run: npx cdk deploy --require-approval never --outputs-file cdk-outputs.json
+        run: npx cdk deploy "$STACK_NAME" --require-approval never --outputs-file cdk-outputs.json
 
       - name: Sync frontend build to S3
         working-directory: infra
