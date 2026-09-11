@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "cdk": "cdk"
+    "build": "tsc --noEmit",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy --require-approval never",
+    "destroy": "cdk destroy"
   },
   "devDependencies": {
     "aws-cdk": "^2.1029.0",
