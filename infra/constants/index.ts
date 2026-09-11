@@ -1,4 +1,4 @@
-export const DOMAIN_NAME = 'enri.portfolio.dev';
+export const DOMAIN_NAME = 'enri-portfolio.dev';
 
 /** Region the stack deploys to. */
 export const STACK_REGION = 'eu-west-1';
