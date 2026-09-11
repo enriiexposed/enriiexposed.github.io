@@ -9,7 +9,6 @@ permissions:
 
 # Stack name and region must match infra/bin/infra.ts and infra/constants/index.ts.
 env:
-  AWS_REGION: eu-west-1
   STACK_NAME: PortfolioInfraStack
 
 jobs:
@@ -48,7 +47,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy infra (CDK)
         working-directory: infra
