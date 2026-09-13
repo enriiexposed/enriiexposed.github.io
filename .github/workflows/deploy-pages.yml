@@ -1,6 +1,6 @@
 name: Deploy to GitHub Pages
 
-run-name: "@{{github.actor}} -> Deploy to GitHub Pages {{github.run_number}}"
+run-name: "@${{ github.actor }} -> Deploy to GitHub Pages ${{ github.run_number }}"
 
 on:
   push:

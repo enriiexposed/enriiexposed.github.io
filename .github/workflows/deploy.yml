@@ -1,6 +1,6 @@
 name: Deploy
 
-run-name: "@{{github.actor}} -> Deploy {{github.run_number}}"
+run-name: ${{ github.actor }} -> Deploy ${{ github.run_number }}
 
 on:
   workflow_dispatch:
