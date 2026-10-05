@@ -1,13 +1,21 @@
-<canvas id="cursor-trail" class="pointer-events-none fixed inset-0 z-40" aria-hidden="true"></canvas>
+<canvas id="cursor-trail" class="pointer-events-none fixed inset-0 z-[9999]" aria-hidden="true"></canvas>
 
 <script>
   const TRAIL_MAX_AGE = 350;
+  // Arrow outline relative to its tip (the pointer hotspot).
+  const ARROW: [number, number][] = [
+    [0, 0],
+    [20, 16],
+    [8, 16],
+    [0, 26],
+  ];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canvas = document.getElementById('cursor-trail') as HTMLCanvasElement | null;
   const ctx = canvas?.getContext('2d') ?? null;
 
   if (!reducedMotion && canvas && ctx) {
     let points: { x: number; y: number; t: number }[] = [];
+    let cursor: { x: number; y: number } | null = null;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -15,7 +23,36 @@
     };
 
     const onMove = (e: MouseEvent) => {
+      cursor = { x: e.clientX, y: e.clientY };
       points.push({ x: e.clientX, y: e.clientY, t: performance.now() });
+    };
+
+    const drawArrow = (x: number, y: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.beginPath();
+      ARROW.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
+      ctx.closePath();
+
+      const stripes = ctx.createLinearGradient(0, 2, 9, 20);
+      stripes.addColorStop(0, '#c89cf7');
+      stripes.addColorStop(0.22, '#c89cf7');
+      stripes.addColorStop(0.22, '#ffffff');
+      stripes.addColorStop(0.3, '#ffffff');
+      stripes.addColorStop(0.3, '#86cff5');
+      stripes.addColorStop(0.6, '#86cff5');
+      stripes.addColorStop(0.6, '#ffffff');
+      stripes.addColorStop(0.68, '#ffffff');
+      stripes.addColorStop(0.68, '#c89cf7');
+      stripes.addColorStop(1, '#c89cf7');
+      ctx.fillStyle = stripes;
+      ctx.fill();
+
+      ctx.strokeStyle = '#1f1f1f';
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'miter';
+      ctx.stroke();
+      ctx.restore();
     };
 
     const draw = () => {
@@ -23,11 +60,12 @@
       points = points.filter((p) => now - p.t < TRAIL_MAX_AGE);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      const trailRgb = document.documentElement.dataset.theme === 'dark' ? '255, 255, 255' : '0, 0, 0';
       for (let i = 1; i < points.length; i++) {
         const prev = points[i - 1];
         const curr = points[i];
         const age = (now - curr.t) / TRAIL_MAX_AGE;
-        ctx.strokeStyle = `rgba(220, 38, 38, ${1 - age})`;
+        ctx.strokeStyle = `rgba(${trailRgb}, ${1 - age})`;
         ctx.lineWidth = 4 * (1 - age) + 1;
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -36,13 +74,7 @@
         ctx.stroke();
       }
 
-      const last = points[points.length - 1];
-      if (last) {
-        ctx.beginPath();
-        ctx.fillStyle = '#dc2626';
-        ctx.arc(last.x, last.y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      if (cursor) drawArrow(cursor.x, cursor.y);
 
       requestAnimationFrame(draw);
     };
@@ -51,6 +83,7 @@
     resize();
     window.addEventListener('mousemove', onMove);
     window.addEventListener('resize', resize);
+    document.addEventListener('mouseleave', () => (cursor = null));
     requestAnimationFrame(draw);
   }
 </script>
