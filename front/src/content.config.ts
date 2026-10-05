@@ -5,7 +5,9 @@ const trayectoria = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/trayectoria' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date().optional(),
+    location: z.string(),
     details: z.array(z.string()),
   }),
 });

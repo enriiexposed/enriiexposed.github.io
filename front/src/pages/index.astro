@@ -6,7 +6,7 @@ import Contact from '../components/Contact.astro';
 import { getCollection } from 'astro:content';
 
 const entries = (await getCollection('trayectoria')).sort(
-	(a, b) => b.data.date.getTime() - a.data.date.getTime()
+	(a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
 );
 ---
 

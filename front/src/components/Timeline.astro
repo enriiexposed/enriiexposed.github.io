@@ -6,6 +6,9 @@ interface Props {
 }
 
 const { entries } = Astro.props;
+
+const formatDate = (date: Date) =>
+  `${String(date.getUTCMonth() + 1).padStart(2, '0')}-${date.getUTCFullYear()}`;
 ---
 
 <section id="projects" class="mx-auto max-w-2xl px-6 py-16">
@@ -17,7 +20,8 @@ const { entries } = Astro.props;
       entries.map((entry) => (
         <li>
           <article class="card-focus rounded-xl border border-card-border bg-card p-6">
-            <p class="mb-1 text-sm font-semibold text-muted">{entry.data.date.getFullYear()}</p>
+            <p class="mb-1 text-sm font-semibold text-muted">{formatDate(entry.data.startDate)} – {entry.data.endDate ? formatDate(entry.data.endDate) : "Actualidad"}</p>
+            <p class="mb-2 text-sm text-muted">{entry.data.location}</p>
             <h2 class="mb-2 text-lg">{entry.data.title}</h2>
             <ul class="list-disc pl-4 text-sm leading-relaxed text-muted">
               {entry.data.details.map((detail) => (
