@@ -1,10 +1,19 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import LanguagePicker from './LanguagePicker.astro';
+import { useTranslations, localePath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
+  { href: localePath(lang, '/'), label: t('nav.home') },
+  { href: localePath(lang, '/projects'), label: t('nav.projects') },
+  { href: localePath(lang, '/blog'), label: t('nav.blog') },
 ];
 ---
 
@@ -23,7 +32,8 @@ const links = [
         ))
       }
     </div>
-    <div class="flex justify-end">
+    <div class="flex items-center justify-end gap-2">
+      <LanguagePicker lang={lang} />
       <ThemeToggle />
     </div>
   </nav>

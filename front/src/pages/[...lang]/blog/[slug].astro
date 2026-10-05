@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import { formatPubDate, readingTime } from '../../../utils/readingTime';
+import { languages, defaultLang } from '../../../i18n/ui';
+import { useTranslations, localePath, type Lang } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const langs = Object.keys(languages) as Lang[];
+  const paths = [];
+  for (const lang of langs) {
+    const posts = await getCollection('blog', ({ id }) => id.startsWith(`${lang}/`));
+    for (const post of posts) {
+      const slug = post.id.split('/').slice(1).join('/');
+      paths.push({ params: { lang: lang === defaultLang ? undefined : lang, slug }, props: { post, lang } });
+    }
+  }
+  return paths;
+}
+
+const { post, lang } = Astro.props as { post: Awaited<ReturnType<typeof getCollection<'blog'>>>[number]; lang: Lang };
+const t = useTranslations(lang);
+const { Content } = await render(post);
+const { title, subtitle, pubDate, image, sourceUrl, tags } = post.data;
+const imageClass = 'mt-6 h-56 w-full rounded-xl border border-card-border object-cover';
+---
+
+<Layout lang={lang} title={title}>
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <a href={localePath(lang, '/blog')} class="text-sm text-muted transition-colors hover:text-fg">{t('blog.back')}</a>
+    {
+      sourceUrl ? (
+        <a href={sourceUrl} target="_blank" rel="noopener">
+          <img src={image} alt="" class={imageClass} />
+        </a>
+      ) : (
+        <img src={image} alt="" class={imageClass} />
+      )
+    }
+    <h1 class="mt-8 bg-linear-to-r from-accent-start to-accent-end bg-clip-text text-4xl font-bold text-transparent drop-shadow-[0_0_12px_rgba(94,194,255,0.45)]">
+      {title}
+    </h1>
+    <p class="mt-2 text-lg text-muted">{subtitle}</p>
+    <p class="mt-3 text-sm text-muted">{formatPubDate(pubDate, lang)} · {readingTime(post.body)} {t('blog.readingTime')}</p>
+    <ul class="mt-4 flex list-none flex-wrap gap-2 p-0">
+      {tags.map((tag) => <li class="rounded-full border border-card-border px-2.5 py-0.5 text-xs text-muted">{tag}</li>)}
+    </ul>
+    <div class="post-body mt-10">
+      <Content />
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+  .post-body h2 { margin: 2rem 0 0.75rem; font-size: 1.5rem; font-weight: 700; }
+  .post-body p { margin: 0.75rem 0; line-height: 1.75; color: var(--fg); }
+  .post-body ul, .post-body ol { margin: 0.75rem 0; padding-left: 1.5rem; line-height: 1.75; }
+  .post-body ul { list-style: disc; }
+  .post-body ol { list-style: decimal; }
+  .post-body code { padding: 0.1rem 0.35rem; border-radius: 0.25rem; background: var(--card-bg); border: 1px solid var(--card-border); font-size: 0.9em; }
+  .post-body a { color: var(--timeline-line-start); text-decoration: underline; }
+</style>

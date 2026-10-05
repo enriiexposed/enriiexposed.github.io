@@ -1,0 +1,30 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Intro from '../../components/Intro.astro';
+import Timeline from '../../components/Timeline.astro';
+import Contact from '../../components/Contact.astro';
+import { getCollection } from 'astro:content';
+import { languages, defaultLang } from '../../i18n/ui';
+import type { Lang } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return (Object.keys(languages) as Lang[]).map((lang) => ({
+    params: { lang: lang === defaultLang ? undefined : lang },
+    props: { lang },
+  }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+
+const entries = (await getCollection('trayectoria', ({ id }) => id.startsWith(`${lang}/`))).sort(
+	(a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+);
+---
+
+<Layout lang={lang}>
+	<main>
+		<Intro lang={lang} />
+		<Timeline entries={entries} lang={lang} />
+		<Contact lang={lang} />
+	</main>
+</Layout>

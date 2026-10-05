@@ -1,0 +1,36 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import BlogSearch from '../../../components/BlogSearch.astro';
+import { getCollection } from 'astro:content';
+import { languages, defaultLang } from '../../../i18n/ui';
+import { useTranslations, type Lang } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return (Object.keys(languages) as Lang[]).map((lang) => ({
+    params: { lang: lang === defaultLang ? undefined : lang },
+    props: { lang },
+  }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+
+const posts = (await getCollection('blog', ({ id }) => id.startsWith(`${lang}/`))).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b) => a.localeCompare(b, lang));
+---
+
+<Layout lang={lang}>
+  <main class="mx-auto max-w-3xl px-6 py-16">
+    <h1 class="text-4xl font-bold">{t('blog.title')}</h1>
+    <p class="mt-4 text-lg text-muted">{t('blog.intro')}</p>
+    <BlogSearch lang={lang} tags={tags} />
+    <ol class="mt-8 flex list-none flex-col gap-6 p-0">
+      {posts.map((post) => <li><BlogCard entry={post} lang={lang} /></li>)}
+    </ol>
+    <p id="blog-empty" class="mt-8 text-center text-muted" hidden>{t('blog.search.empty')}</p>
+  </main>
+</Layout>

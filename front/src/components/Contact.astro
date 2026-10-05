@@ -1,10 +1,21 @@
+---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
 <section id="contact" class="mx-auto max-w-2xl px-6 py-16">
-  <h2 class="text-2xl font-bold">Contact</h2>
-  <p class="mt-2 text-muted">Let's talk? Write to me and I'll get back to you soon.</p>
+  <h2 class="text-2xl font-bold">{t('contact.title')}</h2>
+  <p class="mt-2 text-muted">{t('contact.intro')}</p>
 
   <form class="mt-8 flex flex-col gap-4">
     <div class="flex flex-col gap-1">
-      <label for="name" class="text-sm text-muted">Name</label>
+      <label for="name" class="text-sm text-muted">{t('contact.name')}</label>
       <input
         id="name"
         name="name"
@@ -13,7 +24,7 @@
       />
     </div>
     <div class="flex flex-col gap-1">
-      <label for="email" class="text-sm text-muted">Email</label>
+      <label for="email" class="text-sm text-muted">{t('contact.email')}</label>
       <input
         id="email"
         name="email"
@@ -22,7 +33,7 @@
       />
     </div>
     <div class="flex flex-col gap-1">
-      <label for="subject" class="text-sm text-muted">Subject</label>
+      <label for="subject" class="text-sm text-muted">{t('contact.subject')}</label>
       <input
         id="subject"
         name="subject"
@@ -31,7 +42,7 @@
       />
     </div>
     <div class="flex flex-col gap-1">
-      <label for="message" class="text-sm text-muted">Message</label>
+      <label for="message" class="text-sm text-muted">{t('contact.message')}</label>
       <textarea
         id="message"
         name="message"
@@ -43,7 +54,7 @@
       type="submit"
       class="mt-2 self-start rounded-md border border-card-border bg-card px-6 py-2.5 text-sm font-medium text-fg"
     >
-      Send
+      {t('contact.send')}
     </button>
   </form>
 </section>

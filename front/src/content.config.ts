@@ -12,4 +12,16 @@ const trayectoria = defineCollection({
   }),
 });
 
-export const collections = { trayectoria };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    pubDate: z.coerce.date(),
+    image: z.string(),
+    sourceUrl: z.string().url().optional(),
+    tags: z.array(z.string()),
+  }),
+});
+
+export const collections = { trayectoria, blog };

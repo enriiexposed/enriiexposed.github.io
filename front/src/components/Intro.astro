@@ -1,4 +1,13 @@
 ---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
 const nodes = [
   { name: 'Anthropic', x: 50, y: 10, delay: '0s' },
   { name: 'TypeScript', x: 16, y: 28, delay: '0.4s' },
@@ -42,12 +51,12 @@ const icons: Record<string, string> = {
 
 <section class="mx-auto grid max-w-5xl gap-10 px-6 py-16 md:grid-cols-2 md:items-center">
   <div>
-    <h1 class="text-4xl font-bold">Hey! It's Enrique!</h1>
+    <h1 class="text-4xl font-bold">{t('home.greeting')}</h1>
     <p class="mt-4 text-lg text-muted">
-      I build things. I talk about Computer Science.
+      {t('home.tagline1')}
     </p>
     <p class="mt-4 text-lg text-muted">
-      Faithful and believer.
+      {t('home.tagline2')}
     </p>
   </div>
 
